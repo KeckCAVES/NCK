@@ -1,7 +1,7 @@
 ########################################################################
 # Makefile for Nanotech Construction Kit, an interactive molecular
 # dynamics simulation.
-# Copyright (c) 2008-2013 Oliver Kreylos
+# Copyright (c) 2008 Oliver Kreylos
 #
 # This file is part of the WhyTools Build Environment.
 # 
@@ -21,91 +21,96 @@
 # 02111-1307 USA
 ########################################################################
 
-# Directory containing the Vrui build system. The directory below
-# matches the default Vrui installation; if Vrui's installation
-# directory was changed during Vrui's installation, the directory below
-# must be adapted.
-VRUI_MAKEDIR := $(HOME)/Vrui-3.0/share/make
+# Root directory of the Vrui software installation. This must match the
+# same setting in Vrui's makefile. By default the directories match; if
+# the installation directory was adjusted during Vrui's installation, it
+# must be adjusted here as well.
+VRUIDIR = $(HOME)/Vrui-1.0
 
-# Base installation directory for the example programs. If this is set
-# to the default of $(PWD), the example programs do not have to be
-# installed to be run. Created executables and resources will be
-# installed in the bin and share directories under the given base
-# directory, respectively.
-# Important note: Do not use ~ as an abbreviation for the user's home
-# directory here; use $(HOME) instead.
-INSTALLDIR := $(shell pwd)
+# Base installation directory for Nanotech Construction Kit. If this is
+# set to the default of $(PWD), Nanotech Construction Kit does not have
+# to be installed to be run. Nanotech Construction Kit's executable will
+# be installed in the bin directory underneath the given base directory,
+# and its data files will be installed in the share directory.
+INSTALLDIR = $(shell pwd)
 
-########################################################################
-# Everything below here should not have to be changed
-########################################################################
+# Set up additional flags for the C++ compiler:
+CFLAGS = 
 
-# Version number for installation subdirectories. This is used to keep
-# subsequent release versions of the Nanotech Construction Kit from
-# clobbering each other. The value should be identical to the
-# major.minor version number found in VERSION in the root package
-# directory.
-VERSION = 1.9
+# Set up destination directories for compilation products:
+OBJDIRBASE = o
+BINDIRBASE = bin
 
-# Set up resource directories: */
-CONFIGDIR = etc/NCK-$(VERSION)
+# Create debug or fully optimized versions of the software:
+ifdef DEBUG
+  # Include the debug version of the Vrui application makefile fragment:
+  include $(VRUIDIR)/etc/Vrui.debug.makeinclude
+  # Enable debugging and disable optimization:
+  CFLAGS += -g3 -O0
+  # Set destination directories for created objects:
+  OBJDIR = $(OBJDIRBASE)/debug
+  BINDIR = $(BINDIRBASE)/debug
+else
+  # Include the release version of the Vrui application makefile fragment:
+  include $(VRUIDIR)/etc/Vrui.makeinclude
+  # Disable debugging and enable optimization:
+  CFLAGS += -g0 -O3 -DNDEBUG
+  # Set destination directories for created objects:
+  OBJDIR = $(OBJDIRBASE)
+  BINDIR = $(BINDIRBASE)
+endif
 
-# Include definitions for the system environment and system-provided
-# packages
-include $(VRUI_MAKEDIR)/SystemDefinitions
-include $(VRUI_MAKEDIR)/Packages.System
-include $(VRUI_MAKEDIR)/Configuration.Vrui
-include $(VRUI_MAKEDIR)/Packages.Vrui
+# Pattern rule to compile C++ sources:
+$(OBJDIR)/%.o: %.cpp
+	@mkdir -p $(OBJDIR)/$(*D)
+	@echo Compiling $<...
+	@g++ -c -o $@ $(VRUI_CFLAGS) $(CFLAGS) $<
 
-# Set installation directory structure:
-EXECUTABLEINSTALLDIR = $(INSTALLDIR)/$(EXEDIR)
-ETCINSTALLDIR = $(INSTALLDIR)/$(CONFIGDIR)
-
-########################################################################
-# List common packages used by all components of this project
-# (Supported packages can be found in $(VRUI_MAKEDIR)/Packages.*)
-########################################################################
-
-PACKAGES = MYVRUI
-
-########################################################################
-# Specify all final targets
-########################################################################
-
-ALL = $(EXEDIR)/NanotechConstructionKit
-
-PHONY: all
+# Rule to build all Nanotech Construction Kit components:
+ALL = $(BINDIR)/NanotechConstructionKit
+.PHONY: all
 all: $(ALL)
 
-########################################################################
-# Specify other actions to be performed on a `make clean'
-########################################################################
+# Rule to remove build results:
+clean:
+	-rm -f $(OBJDIR)/*.o
+	-rm -f $(ALL)
+	-rmdir $(BINDIR)
 
-.PHONY: extraclean
-extraclean:
+# Rule to clean the source directory for packaging:
+distclean:
+	-rm -rf $(OBJDIRBASE)
+	-rm -rf $(BINDIRBASE)
 
-.PHONY: extrasqueakyclean
-extrasqueakyclean:
+NANOTECHCONSTRUCTIONKIT_SOURCES = StructuralUnit.cpp \
+                                  Triangle.cpp \
+                                  Tetrahedron.cpp \
+                                  Octahedron.cpp \
+                                  Sphere.cpp \
+                                  Cylinder.cpp \
+                                  UnitManager.cpp \
+                                  SpaceGridCell.cpp \
+                                  GhostUnit.cpp \
+                                  SpaceGrid.cpp \
+                                  ReadUnitFile.cpp \
+                                  ReadCarFile.cpp \
+                                  Polyhedron.cpp \
+                                  UnitDragger.cpp \
+                                  NanotechConstructionKit.cpp
 
-# Include basic makefile
-include $(VRUI_MAKEDIR)/BasicMakefile
+$(OBJDIR)/NanotechConstructionKit.o: CFLAGS += -DNANOTECHCONSTRUCTIONKIT_CFGFILENAME='"$(INSTALLDIR)/etc/NCK.cfg"'
 
-########################################################################
-# Specify build rules for executables
-########################################################################
-
-NANOTECHCONSTRUCTIONKIT_SOURCES = $(wildcard *.cpp)
-
-$(OBJDIR)/NanotechConstructionKit.o: CFLAGS += -DNANOTECHCONSTRUCTIONKIT_CFGFILENAME='"$(ETCINSTALLDIR)/NCK.cfg"'
-
-$(EXEDIR)/NanotechConstructionKit: $(NANOTECHCONSTRUCTIONKIT_SOURCES:%.cpp=$(OBJDIR)/%.o)
+$(BINDIR)/NanotechConstructionKit: $(NANOTECHCONSTRUCTIONKIT_SOURCES:%.cpp=$(OBJDIR)/%.o)
+	@mkdir -p $(BINDIR)
+	@echo Linking $@...
+	@g++ -o $@ $^ $(VRUI_LINKFLAGS)
 .PHONY: NanotechConstructionKit
-NanotechConstructionKit: $(EXEDIR)/NanotechConstructionKit
+NanotechConstructionKit: $(BINDIR)/NanotechConstructionKit
 
 install: $(ALL)
 	@echo Installing Nanotech Construction Kit in $(INSTALLDIR)...
 	@install -d $(INSTALLDIR)
-	@install -d $(EXECUTABLEINSTALLDIR)
-	@install $(ALL) $(EXECUTABLEINSTALLDIR)
-	@install -d $(ETCINSTALLDIR)
-	@install -m u=rw,go=r $(CONFIGDIR)/NCK.cfg $(ETCINSTALLDIR)
+	@install -d $(INSTALLDIR)/bin
+	@install $(BINDIR)/NanotechConstructionKit $(INSTALLDIR)/bin
+	@install -d $(INSTALLDIR)/etc
+	@install etc/NCK.cfg $(INSTALLDIR)/etc

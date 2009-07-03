@@ -2,21 +2,7 @@
 NanotechConstructionKit - Construction kit for nanostructures based on
 simplified geometric simulation and VR interaction with structural unit
 building blocks.
-Copyright (c) 2004-2011 Oliver Kreylos
-
-The Nanotech Construction Kit is free software; you can redistribute it
-and/or modify it under the terms of the GNU General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
-
-The Nanotech Construction Kit is distributed in the hope that it will be
-useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-General Public License for more details.
-
-You should have received a copy of the GNU General Public License along
-with the Nanotech Construction Kit; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+Copyright (c) 2004-2005 Oliver Kreylos
 ***********************************************************************/
 
 #include <stdio.h>
@@ -43,15 +29,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #include <GLMotif/PopupMenu.h>
 #include <GLMotif/PopupWindow.h>
 #include <GLMotif/Menu.h>
-#include <GLMotif/SubMenu.h>
 #include <GLMotif/Label.h>
 #include <GLMotif/TextField.h>
 #include <GLMotif/Button.h>
 #include <GLMotif/CascadeButton.h>
 #include <GLMotif/WidgetManager.h>
-#include <Vrui/Vrui.h>
 #include <Vrui/VRScreen.h>
-#include <Vrui/OpenFile.h>
+#include <Vrui/Vrui.h>
 
 #include "AffineSpace.h"
 #include "StructuralUnit.h"
@@ -164,7 +148,7 @@ GLMotif::Popup* NanotechConstructionKit::createUnitOperationsMenu(void)
 	{
 	GLMotif::Popup* unitOperationsMenuPopup=new GLMotif::Popup("UnitOperationsMenuPopup",Vrui::getWidgetManager());
 	
-	GLMotif::RowColumn* unitOperationsMenu=new GLMotif::SubMenu("UnitOperationsMenu",unitOperationsMenuPopup,false);
+	GLMotif::RowColumn* unitOperationsMenu=new GLMotif::RowColumn("UnitOperationsMenu",unitOperationsMenuPopup,false);
 	
 	GLMotif::Button* unmarkAllUnitsButton=new GLMotif::Button("UnmarkAllUnitsButton",unitOperationsMenu,"Unmark All Units");
 	unmarkAllUnitsButton->getSelectCallbacks().add(this,&NanotechConstructionKit::unmarkAllUnitsCallback);
@@ -181,7 +165,7 @@ GLMotif::Popup* NanotechConstructionKit::createRenderTogglesMenu(void)
 	{
 	GLMotif::Popup* renderTogglesMenuPopup=new GLMotif::Popup("RenderTogglesMenuPopup",Vrui::getWidgetManager());
 	
-	GLMotif::RowColumn* renderTogglesMenu=new GLMotif::SubMenu("RenderTogglesMenu",renderTogglesMenuPopup,false);
+	GLMotif::RowColumn* renderTogglesMenu=new GLMotif::RowColumn("RenderTogglesMenu",renderTogglesMenuPopup,false);
 	
 	GLMotif::ToggleButton* showUnitsToggle=new GLMotif::ToggleButton("ShowUnitsToggle",renderTogglesMenu,"Show Units");
 	showUnitsToggle->setToggle(grid->getShowUnits());
@@ -205,7 +189,7 @@ GLMotif::Popup* NanotechConstructionKit::createIoMenu(void)
 	{
 	GLMotif::Popup* ioMenuPopup=new GLMotif::Popup("IoMenuPopup",Vrui::getWidgetManager());
 	
-	GLMotif::RowColumn* ioMenu=new GLMotif::SubMenu("IoMenu",ioMenuPopup,false);
+	GLMotif::RowColumn* ioMenu=new GLMotif::RowColumn("IoMenu",ioMenuPopup,false);
 	
 	GLMotif::Button* loadUnitsButton=new GLMotif::Button("LoadUnitsButton",ioMenu,"Load Units...");
 	loadUnitsButton->getSelectCallbacks().add(this,&NanotechConstructionKit::loadUnitsCallback);
@@ -604,7 +588,7 @@ void NanotechConstructionKit::showStatisticsToggleValueChangedCallback(GLMotif::
 	{
 	/* Hide or show statistics dialog: */
 	if(cbData->set)
-		Vrui::popupPrimaryWidget(statisticsDialog);
+		Vrui::getWidgetManager()->popupPrimaryWidget(statisticsDialog,Vrui::getWidgetManager()->calcWidgetTransformation(mainMenu));
 	else
 		Vrui::popdownPrimaryWidget(statisticsDialog);
 	}
@@ -625,22 +609,7 @@ void NanotechConstructionKit::unlockAllUnitsCallback(Misc::CallbackData* cbData)
 
 void NanotechConstructionKit::loadUnitsCallback(Misc::CallbackData* cbData)
 	{
-	/* Create a file selection dialog to select a viewpoint file: */
-	GLMotif::FileSelectionDialog* loadUnitsDialog=new GLMotif::FileSelectionDialog(Vrui::getWidgetManager(),"Load Units...",Vrui::openDirectory("."),".units");
-	loadUnitsDialog->getOKCallbacks().add(this,&NanotechConstructionKit::loadUnitsOKCallback);
-	loadUnitsDialog->deleteOnCancel();
-	
-	/* Show the file selection dialog: */
-	Vrui::popupPrimaryWidget(loadUnitsDialog);
-	}
-
-void NanotechConstructionKit::loadUnitsOKCallback(GLMotif::FileSelectionDialog::OKCallbackData* cbData)
-	{
-	/* Load the selected unit file: */
-	NCK::readUnitFile(grid,cbData->selectedDirectory->getPath(cbData->selectedFileName).c_str());
-	
-	/* Destroy the file selection dialog: */
-	cbData->fileSelectionDialog->close();
+	NCK::readUnitFile(grid,"Scratch.units");
 	}
 
 void NanotechConstructionKit::saveUnitsCallback(Misc::CallbackData* cbData)
