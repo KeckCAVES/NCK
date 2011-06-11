@@ -2,7 +2,7 @@
 NanotechConstructionKit - Construction kit for nanostructures based on
 simplified geometric simulation and VR interaction with structural unit
 building blocks.
-Copyright (c) 2004-2005 Oliver Kreylos
+Copyright (c) 2004-2010 Oliver Kreylos
 ***********************************************************************/
 
 #include <stdio.h>
@@ -588,7 +588,7 @@ void NanotechConstructionKit::showStatisticsToggleValueChangedCallback(GLMotif::
 	{
 	/* Hide or show statistics dialog: */
 	if(cbData->set)
-		Vrui::getWidgetManager()->popupPrimaryWidget(statisticsDialog,Vrui::getWidgetManager()->calcWidgetTransformation(mainMenu));
+		Vrui::popupPrimaryWidget(statisticsDialog);
 	else
 		Vrui::popdownPrimaryWidget(statisticsDialog);
 	}

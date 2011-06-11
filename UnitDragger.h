@@ -9,7 +9,7 @@ Copyright (c) 2005 Oliver Kreylos
 #include <vector>
 #include <GL/gl.h>
 #include <GL/GLObject.h>
-#include <Vrui/Tools/DraggingTool.h>
+#include <Vrui/DraggingTool.h>
 #include <Vrui/DraggingToolAdapter.h>
 
 #include "AffineSpace.h"

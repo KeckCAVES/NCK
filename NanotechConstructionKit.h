@@ -1,8 +1,8 @@
 /***********************************************************************
 NanotechConstructionKit - Construction kit for nanostructures based on
-simplified geometric simulation and GLMotif:: interaction with structural unit
+simplified geometric simulation and VR interaction with structural unit
 building blocks.
-Copyright (c) 2004-2005 Oliver Kreylos
+Copyright (c) 2004-2010 Oliver Kreylos
 ***********************************************************************/
 
 #ifndef NANOTECHCONSTRUCTIONKIT_INCLUDED

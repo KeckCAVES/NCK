@@ -3,3 +3,7 @@ Nanotech Construction Kit Change History
 
 Nanotech Construction Kit 1.3:
 - Beginning of history file
+
+Nanotech Construction Kit 1.4:
+- Adapted to Vrui-2.1; bumped Vrui requirement to Vrui 2.1-001.
+- Changed build system to simplify creating binary packages.
