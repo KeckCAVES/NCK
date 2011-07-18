@@ -1,7 +1,7 @@
 ########################################################################
 # Makefile for Nanotech Construction Kit, an interactive molecular
 # dynamics simulation.
-# Copyright (c) 2008 Oliver Kreylos
+# Copyright (c) 2008-2011 Oliver Kreylos
 #
 # This file is part of the WhyTools Build Environment.
 # 
@@ -25,7 +25,7 @@
 # same setting in Vrui's makefile. By default the directories match; if
 # the installation directory was adjusted during Vrui's installation, it
 # must be adjusted here as well.
-VRUIDIR = $(HOME)/Vrui-1.0
+VRUIDIR = $(HOME)/Vrui-2.1
 
 # Base installation directory for Nanotech Construction Kit. If this is
 # set to the default of $(PWD), Nanotech Construction Kit does not have
@@ -34,17 +34,32 @@ VRUIDIR = $(HOME)/Vrui-1.0
 # and its data files will be installed in the share directory.
 INSTALLDIR = $(shell pwd)
 
-# Set up additional flags for the C++ compiler:
-CFLAGS = 
+########################################################################
+# Nothing underneath here needs to be changed.
+########################################################################
+
+# Version number for installation subdirectories. This is used to keep
+# subsequent release versions of the Nanotech Construction Kit from
+# clobbering each other. The value should be identical to the
+# major.minor version number found in VERSION in the root package
+# directory.
+VERSION = 1.5
 
 # Set up destination directories for compilation products:
 OBJDIRBASE = o
 BINDIRBASE = bin
 
+# Set up resource directories: */
+CONFIGDIR = etc/NCK-$(VERSION)
+
+# Set up additional flags for the C++ compiler:
+CFLAGS = 
+
 # Create debug or fully optimized versions of the software:
+VRUIMAKEDIR = $(VRUIDIR)/share
 ifdef DEBUG
   # Include the debug version of the Vrui application makefile fragment:
-  include $(VRUIDIR)/etc/Vrui.debug.makeinclude
+  include $(VRUIMAKEDIR)/Vrui.debug.makeinclude
   # Enable debugging and disable optimization:
   CFLAGS += -g3 -O0
   # Set destination directories for created objects:
@@ -52,13 +67,17 @@ ifdef DEBUG
   BINDIR = $(BINDIRBASE)/debug
 else
   # Include the release version of the Vrui application makefile fragment:
-  include $(VRUIDIR)/etc/Vrui.makeinclude
+  include $(VRUIMAKEDIR)/Vrui.makeinclude
   # Disable debugging and enable optimization:
   CFLAGS += -g0 -O3 -DNDEBUG
   # Set destination directories for created objects:
   OBJDIR = $(OBJDIRBASE)
   BINDIR = $(BINDIRBASE)
 endif
+
+# Set up installation directory structure:
+BININSTALLDIR = $(INSTALLDIR)/$(BINDIRBASE)
+ETCINSTALLDIR = $(INSTALLDIR)/$(CONFIGDIR)
 
 # Pattern rule to compile C++ sources:
 $(OBJDIR)/%.o: %.cpp
@@ -98,7 +117,7 @@ NANOTECHCONSTRUCTIONKIT_SOURCES = StructuralUnit.cpp \
                                   UnitDragger.cpp \
                                   NanotechConstructionKit.cpp
 
-$(OBJDIR)/NanotechConstructionKit.o: CFLAGS += -DNANOTECHCONSTRUCTIONKIT_CFGFILENAME='"$(INSTALLDIR)/etc/NCK.cfg"'
+$(OBJDIR)/NanotechConstructionKit.o: CFLAGS += -DNANOTECHCONSTRUCTIONKIT_CFGFILENAME='"$(ETCINSTALLDIR)/NCK.cfg"'
 
 $(BINDIR)/NanotechConstructionKit: $(NANOTECHCONSTRUCTIONKIT_SOURCES:%.cpp=$(OBJDIR)/%.o)
 	@mkdir -p $(BINDIR)
@@ -110,7 +129,7 @@ NanotechConstructionKit: $(BINDIR)/NanotechConstructionKit
 install: $(ALL)
 	@echo Installing Nanotech Construction Kit in $(INSTALLDIR)...
 	@install -d $(INSTALLDIR)
-	@install -d $(INSTALLDIR)/bin
-	@install $(BINDIR)/NanotechConstructionKit $(INSTALLDIR)/bin
-	@install -d $(INSTALLDIR)/etc
-	@install etc/NCK.cfg $(INSTALLDIR)/etc
+	@install -d $(BININSTALLDIR)
+	@install $(ALL) $(BININSTALLDIR)
+	@install -d $(ETCINSTALLDIR)
+	@install $(CONFIGDIR)/NCK.cfg $(ETCINSTALLDIR)
