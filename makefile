@@ -43,7 +43,7 @@ INSTALLDIR = $(shell pwd)
 # clobbering each other. The value should be identical to the
 # major.minor version number found in VERSION in the root package
 # directory.
-VERSION = 1.4
+VERSION = 1.5
 
 # Set up destination directories for compilation products:
 OBJDIRBASE = o
