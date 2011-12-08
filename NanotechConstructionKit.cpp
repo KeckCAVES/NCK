@@ -49,8 +49,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #include <GLMotif/Button.h>
 #include <GLMotif/CascadeButton.h>
 #include <GLMotif/WidgetManager.h>
-#include <Vrui/VRScreen.h>
 #include <Vrui/Vrui.h>
+#include <Vrui/VRScreen.h>
+#include <Vrui/OpenFile.h>
 
 #include "AffineSpace.h"
 #include "StructuralUnit.h"
@@ -625,7 +626,7 @@ void NanotechConstructionKit::unlockAllUnitsCallback(Misc::CallbackData* cbData)
 void NanotechConstructionKit::loadUnitsCallback(Misc::CallbackData* cbData)
 	{
 	/* Create a file selection dialog to select a viewpoint file: */
-	GLMotif::FileSelectionDialog* loadUnitsDialog=new GLMotif::FileSelectionDialog(Vrui::getWidgetManager(),"Load Units...",0,".units",Vrui::openPipe());
+	GLMotif::FileSelectionDialog* loadUnitsDialog=new GLMotif::FileSelectionDialog(Vrui::getWidgetManager(),"Load Units...",Vrui::openDirectory("."),".units");
 	loadUnitsDialog->getOKCallbacks().add(this,&NanotechConstructionKit::loadUnitsOKCallback);
 	loadUnitsDialog->getCancelCallbacks().add(loadUnitsDialog,&GLMotif::FileSelectionDialog::defaultCloseCallback);
 	
@@ -636,10 +637,10 @@ void NanotechConstructionKit::loadUnitsCallback(Misc::CallbackData* cbData)
 void NanotechConstructionKit::loadUnitsOKCallback(GLMotif::FileSelectionDialog::OKCallbackData* cbData)
 	{
 	/* Load the selected unit file: */
-	NCK::readUnitFile(grid,cbData->selectedFileName.c_str());
+	NCK::readUnitFile(grid,cbData->selectedDirectory->getPath(cbData->selectedFileName).c_str());
 	
 	/* Destroy the file selection dialog: */
-	Vrui::getWidgetManager()->deleteWidget(cbData->fileSelectionDialog);
+	cbData->fileSelectionDialog->close();
 	}
 
 void NanotechConstructionKit::saveUnitsCallback(Misc::CallbackData* cbData)
