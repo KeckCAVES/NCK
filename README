@@ -1,5 +1,5 @@
 ========================================================================
-README for Nanotech Construction Kit 1.5
+README for Nanotech Construction Kit 1.6
 Copyright (c) 2004-2011 Oliver Kreylos
 ========================================================================
 
@@ -20,7 +20,7 @@ http://idav.ucdavis.edu/~okreylos/ResDev/NanoTech
 Requirements
 ============
 
-The Nanotech Construction Kit version 1.5 requires Vrui version 2.1
+The Nanotech Construction Kit version 1.6 requires Vrui version 2.2
 build 001 or newer.
 
 Installation Guide
@@ -37,19 +37,19 @@ installed in order to be used; installation (to a system directory such
 as /usr/local) is only recommended if the Nanotech Construction Kit will
 be used from multiple user accounts.
 
-0. Install Vrui from ~/src/Vrui-2.1-<build> (see Vrui README file).
+0. Install Vrui from ~/src/Vrui-<version>-<build> (see Vrui README file).
 
 1. Change into ~/src directory and unpack the Nanotech Construction Kit
    tarball:
    > cd ~/src
-   > tar xfz <download path>/NCK-1.5.tar.gz
+   > tar xfz <download path>/NCK-<version>.tar.gz
    - or -
-   > tar xf <download path>/NCK-1.5.tar
+   > tar xf <download path>/NCK-<version>.tar
 
 2. Change into the Nanotech Construction Kit base directory:
-   > cd NCK-1.5
+   > cd NCK-<version>
 
-3. Adapt makefile if Vrui installation path is *not* ~/Vrui-2.1 by
+3. Adapt makefile if Vrui installation path is *not* ~/Vrui-2.2 by
    setting the VRUIDIR variable to the correct location. VRUIDIR is
    *not* the directory containing Vrui's sources (and the Vrui README
    file), but the directory specified via the INSTALLDIR variable in
@@ -74,19 +74,19 @@ be used from multiple user accounts.
    - or, if the target location is a system directory -
    > sudo make install
    This will copy all executables into <INSTALLDIR>/bin, and the NCK.cfg
-   configuration file into <INSTALLDIR>/etc/NCK-1.5.
+   configuration file into <INSTALLDIR>/etc/NCK-<version>.
 
 7. Optional: Add directory containing the NanotechConstructionKit
-   executable (in ~/src/NCK-1.5/bin in the default installation,
+   executable (in ~/src/NCK-<version>/bin in the default installation,
    in <INSTALLDIR>/bin otherwise) to the user's search path. This allows
    running the Nanotech Construction Kit from any directory. Using csh
    or tcsh:
-   > setenv PATH ${PATH}:~/src/NCK-1.5/bin
+   > setenv PATH ${PATH}:~/src/NCK-<version>/bin
    - or -
    > setenv PATH ${PATH}:<INSTALLDIR>/bin
    where <INSTALLDIR> is the target location set in the makefile.
    Using bash:
-   > export PATH=${PATH}:~/src/NCK-1.5/bin
+   > export PATH=${PATH}:~/src/NCK-<version>/bin
    - or -
    > export PATH=${PATH}:<INSTALLDIR>/bin
    These lines can also be added to the user's .cshrc or .bashrc files
@@ -102,5 +102,5 @@ installed in its base directory, (see steps 4 and 6 above).
    running X server, but, if preferred, it can be started from a MacOS X
    terminal instead of xterm.
 
-2. See Vrui-2.1 documentation on Vrui's basic user interface and how to
-   use the Nanotech Construction Kit.
+2. See Vrui's HTML documentation on Vrui's basic user interface and how
+   to use the Nanotech Construction Kit.

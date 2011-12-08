@@ -11,3 +11,7 @@ Nanotech Construction Kit 1.4:
 Nanotech Construction Kit 1.5:
 - Modernized menu appearance.
 - Added file selection dialog to "Load Units..." menu entry.
+
+Nanotech Construction Kit 1.6:
+- Adapted to Vrui-2.2; bumped Vrui requirement to Vrui 2.2-001.
+- Changed build system to use Vrui's new modular build system.
