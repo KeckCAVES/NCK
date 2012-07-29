@@ -628,7 +628,7 @@ void NanotechConstructionKit::loadUnitsCallback(Misc::CallbackData* cbData)
 	/* Create a file selection dialog to select a viewpoint file: */
 	GLMotif::FileSelectionDialog* loadUnitsDialog=new GLMotif::FileSelectionDialog(Vrui::getWidgetManager(),"Load Units...",Vrui::openDirectory("."),".units");
 	loadUnitsDialog->getOKCallbacks().add(this,&NanotechConstructionKit::loadUnitsOKCallback);
-	loadUnitsDialog->getCancelCallbacks().add(loadUnitsDialog,&GLMotif::FileSelectionDialog::defaultCloseCallback);
+	loadUnitsDialog->getCancelCallbacks().add(&GLMotif::PopupWindow::defaultCloseCallback);
 	
 	/* Show the file selection dialog: */
 	Vrui::popupPrimaryWidget(loadUnitsDialog);
