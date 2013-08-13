@@ -1,5 +1,5 @@
 ========================================================================
-README for Nanotech Construction Kit 1.8
+README for Nanotech Construction Kit 1.9
 Copyright (c) 2004-2013 Oliver Kreylos
 ========================================================================
 
@@ -20,8 +20,8 @@ http://idav.ucdavis.edu/~okreylos/ResDev/NanoTech
 Requirements
 ============
 
-The Nanotech Construction Kit version 1.8 requires Vrui version 2.6
-build 001 or newer.
+The Nanotech Construction Kit requires Vrui version 3.0 build 001 or
+newer.
 
 Installation Guide
 ==================
@@ -49,8 +49,8 @@ be used from multiple user accounts.
 2. Change into the Nanotech Construction Kit base directory:
    > cd NCK-<version>
 
-3. If the Vrui version installed in step 0 was not 2.6, or Vrui's
-   installation directory was changed from the default of ~/Vrui-2.6,
+3. If the Vrui version installed in step 0 was not 3.0, or Vrui's
+   installation directory was changed from the default of ~/Vrui-3.0,
    adapt the makefile using a text editor. Change the value of
    VRUI_MAKEDIR close to the beginning of the file as follows:
    VRUI_MAKEDIR := <Vrui install dir>/share/make
